@@ -1,0 +1,67 @@
+- hosts: jinoServers
+
+  # NOTICE!!!:
+  # DO NOT PUT PLAIN TEXT PASSWORDS HERE!
+  # use encrypted passwords or put them in Ansible vault
+  # but this is just a demo
+  
+  tasks:
+    # - name: Add a group called developer  
+    #   group:
+    #     name: developer
+    #     state: present                #должна существовать
+    #   tags: [users&groups, groups]
+
+    - name: Add user anita with a password
+      user:
+        name: anita
+        password: "{{ vaulted_password | password_hash('sha512') }}"   # берем пароль из переменной и хешируем его
+        update_password: on_create     # обновлять пароль только при создании вариант always - всегда обновлять пароль при создании плейбука   
+        groups: sudo                    # добавляем в группу sudo
+        append: yes                    # append – (no/yes) при добавлении пользователя в дополнительную группу не переопределяем основную группу пользователя
+        generate_ssh_key: yes          # генерим ssh для пользователя
+        ssh_key_bits: 2048             # какой ssh
+        ssh_key_file: .ssh/id_rsa      # в этот файл
+      vars:
+        vaulted_password: "froggy127"     # лучше не хранить пароль в таком открытом виде и сразу его хешировать и вставлять его сбда уже хешированным. sha512 SHA512 - хеш-функция из семейства алгоритмов SHA-2
+      tags: [users&groups, users]
+      become: yes # <---  выполнить из под рута
+
+    - name: apt-get update
+      ansible.builtin.apt:
+        update_cache: yes
+      become: yes # <---  выполнить из под рута
+      tags: baseApps
+
+    - name: install git
+      ansible.builtin.apt:
+        name: git
+        state: present
+        update_cache: yes
+      become: yes # <---  выполнить из под рута
+      tags: baseApps
+
+    - name: install node
+      ansible.builtin.apt:
+        name: nodejs
+        state: present
+        update_cache: yes
+      become: yes # <---  выполнить из под рута
+      tags: baseApps
+   
+    - name: install make
+      ansible.builtin.apt:
+        name: make
+        state: present
+        update_cache: yes
+      become: yes # <---  выполнить из под рута
+      tags: baseApps
+
+    - name: install python3
+      ansible.builtin.apt:
+        name: python3
+        state: present
+        update_cache: yes
+      become: yes # <---  выполнить из под рута
+      tags: baseApps
+  

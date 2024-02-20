@@ -1,0 +1,8 @@
+- hosts: jinoServers
+  become: yes
+  tasks:
+    - name: Remove anita
+      user:
+        name: anita
+        state: absent
+        remove: yes

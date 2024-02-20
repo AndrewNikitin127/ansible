@@ -1,0 +1,12 @@
+- hosts: jinoServers
+
+  tasks:
+    - name: install git
+      ansible.builtin.apt:
+        name: git
+        state: present
+        update_cache: yes
+      become: yes # <---  выполнить из под рута
+
+#  ansible-playbook installGit.yml -i inventory.ini -K  
+# -K need to add sudo password

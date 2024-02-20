@@ -1,0 +1,11 @@
+- hosts: jinoServers
+
+  tasks:
+    - name: unInstall git
+      ansible.builtin.apt:
+        name: git
+        state: absent
+      become: yes # <---  выполнить из под рута
+
+# ansible-playbook uninstallGit.yml -i inventory.ini -K
+# -K need to add sudo password
