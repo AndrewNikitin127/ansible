@@ -1,0 +1,23 @@
+- hosts: jinoServers
+
+  tasks:
+    - name: install nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: latest
+      become: yes
+
+    - name: update nginx config
+      ansible.builtin.copy:
+        src: files/barondu.site
+        dest: /etc/nginx/sites-available/barondu.site
+      notify:
+        - restart nginx
+      become: yes
+
+  handlers:                         #handlers started after all tasks if in tasks be a notify with the same name 
+    - name: restart nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded
+      become: yes

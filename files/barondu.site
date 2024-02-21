@@ -1,0 +1,17 @@
+server {
+        listen 80;       # listen 80 port
+        listen [::]:80;  #IPv6 addresses (0.7.36) are specified in square brackets:
+
+
+        root /home/android127/app/barondu.site;    #directory with app
+
+        index index.html index.htm;                # files give nginx
+
+        server_name barondu.site www.barondu.site;                  # domain
+
+        location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                try_files $uri $uri/ =404;
+        }
+}
