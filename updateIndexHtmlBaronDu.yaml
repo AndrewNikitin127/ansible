@@ -1,0 +1,8 @@
+- hosts: myServer
+
+  tasks:
+    - name: update index.html
+      ansible.builtin.template:     # копируем/заменяем файл index.html на сервере, используя шаблонизатор , который подставит значиния из наших переменных укаанных тут в vars или в inventoryFile или в папках host_vars/group_vars о факту это подстановка значений шаблонизатором
+        src: files/barondu.site/index.html
+        dest: /home/android127/app/barondu.site/index.html
+      become: yes
