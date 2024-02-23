@@ -1,17 +1,17 @@
 - hosts: jinoServers
 
   tasks:
-    - name: install nginx
+    - name: install nginx      # install lauest vers nginx
       ansible.builtin.apt:
         name: nginx
         state: latest
       become: yes
 
     - name: update nginx config
-      ansible.builtin.copy:
+      ansible.builtin.copy:     # копируем/заменяем файл конфига сайта
         src: files/barondu.site
         dest: /etc/nginx/sites-available/barondu.site
-      notify:
+      notify:                   # если этот таск произвел изменение (желтая строка), а он произвел так как мы тот только что файл вставили, то запускается hadlers с именем restart nginx после исполнения всех таксков в  tasks
         - restart nginx
       become: yes
 
