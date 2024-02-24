@@ -1,9 +1,5 @@
 - hosts: jinoServers
 
-  vars:
-    nginx_port: 80
-    root_dir: /home/android127/app/barondu.site
-
   tasks:
     - name: install nginx      # install lauest vers nginx
       ansible.builtin.apt:

@@ -1,8 +1,11 @@
 - hosts: jinoServers
   become: yes
+
   tasks:
-    - name: Remove anita
+    - name: Remove users
       user:
-        name: anita
+        name: "{{item}}"
         state: absent
         remove: yes
+      loop:
+        "{{users}}"

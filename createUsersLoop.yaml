@@ -1,0 +1,48 @@
+- hosts: myServer
+  gather_facts: no 
+
+  tasks:
+    # - name: Add a group called developer  
+    #   group:
+    #     name: developer
+    #     state: present                #должна существовать
+    #   tags: [users&groups, groups]
+
+    - name: Add user anita with a password
+      user:
+        name: "{{item}}"       # из цикла перется массив, который мы туда передали. передали массив users, который хранится в переменной users в /host_var/myServer. Но тут уже указывает как item. по факту тут item это один итем из массива users
+        state: present
+    #    password: "{{ vaulted_password | password_hash('sha512') }}"   # берем пароль из переменной и хешируем его
+    #    update_password: on_create     # обновлять пароль только при создании вариант always - всегда обновлять пароль при создании плейбука   
+    #    groups: sudo                    # добавляем в группу sudo
+    #    append: yes                    # append – (no/yes) при добавлении пользователя в дополнительную группу не переопределяем основную группу пользователя
+        generate_ssh_key: yes          # генерим ssh для пользователя
+        ssh_key_bits: 2048             # какой ssh
+        ssh_key_file: .ssh/id_rsa      # в этот файл
+    #  vars:
+    #    vaulted_password: "froggy127"     # лучше не хранить пароль в таком открытом виде и сразу его хешировать и вставлять его сбда уже хешированным. sha512 SHA512 - хеш-функция из семейства алгоритмов SHA-2
+    #  tags: [users&groups, users]
+      become: yes # <---  выполнить из под рута
+      loop:
+        "{{users}}"
+
+    - name: Add git config file
+      ansible.builtin.template:    
+        src: files/gitconfig.j2
+        dest:  /home/{{item}}/.gitconfig
+        owner: "{{item}}"
+        group: "{{item}}"
+      become: yes # <---  выполнить из под рута
+      loop:
+        "{{users}}"
+    
+    - name: Add pub key to user
+      ansible.builtin.template:    
+        src: files/id_rsa.pub
+        dest:  /home/{{item}}/.ssh/authorized_keys   #как видим в строках не обязательно использовать кавычки для переменных
+        owner: "{{item}}"
+        group: "{{item}}"
+      become: yes # <---  выполнить из под рута
+      loop:
+        "{{users}}"
+
