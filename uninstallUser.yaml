@@ -2,7 +2,7 @@
 
   tasks:
     - name: Remove users
-      user:
+      ansible.builtin.user:
         name: "{{item}}"
         state: absent
         remove: yes

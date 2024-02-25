@@ -1,0 +1,25 @@
+- hosts: jinoServers
+  
+  tasks:
+    - name: started nginx
+      ansible.builtin.service:
+        name: nginx
+        state: stopped
+      become: yes
+
+    - name: unInstall nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: absent
+        autoremove: yes
+        update_cache: yes
+      become: yes # <---  выполнить из под рута
+      notify:                   # если этот таск произвел изменение (желтая строка), а он произвел так как мы тот только что файл вставили, то запускается hadlers с именем restart nginx после исполнения всех таксков в  tasks
+        - restart nginx
+
+  # handlers:                         #handlers started after all tasks if in tasks be a notify with the same name 
+  #   - name: restart nginx
+  #     ansible.builtin.service:
+  #       name: nginx
+  #       state: reloaded
+  #     become: yes
