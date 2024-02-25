@@ -1,5 +1,4 @@
 - hosts: jinoServers
-  become: yes
 
   tasks:
     - name: Remove users
@@ -9,3 +8,4 @@
         remove: yes
       loop:
         "{{users}}"
+      become: yes # <---  выполнить из под рута
