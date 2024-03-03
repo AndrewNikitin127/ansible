@@ -2,6 +2,6 @@ server_name: myServer
 root_dir: /home/android127/app/barondu.site
 nginx_port: 80
 users: [jaime, sansa, robert]                 # так выглядят массивы в ямлах. еще можно использовать не - jaime, а - { name: jaime, groups: wheel } , таким образом у нас будет уже массив объектов. К объекту обращаться объект.ключ или объек[ключ].    в циклах используется {{item}} как одинг итем массива users. Если users массив объектов, то {{item.name}} или {{item[name]}} для обращения по ключу name в объекте в массиве объектов   
-nginx_process_user: www-data
+nginx_process_user: nginx
 ansible_user: android127
 ansible_become_password: "{{root_pass}}"

@@ -1,0 +1,8 @@
+- hosts: all
+  gather_facts: no
+
+  tasks:
+    - name: Read-write git checkout from github
+      ansible.builtin.git:
+        repo: git@github.com:iphilka/stud-template.git
+        dest: /home/android127/hello

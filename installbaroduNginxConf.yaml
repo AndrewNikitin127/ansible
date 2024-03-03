@@ -18,31 +18,26 @@
       notify:                   # если этот таск произвел изменение (желтая строка), а он произвел так как мы тот только что файл вставили, то запускается hadlers с именем restart nginx после исполнения всех таксков в  tasks
         - restart nginx
       become: yes
-
-    - name: group control    # тут еще может возникнуть проблема что nginx демон уже запущен и не получится ему группу поменять поэтому останавливаю nginx
-      user:
-        name: "{{nginx_process_user}}"
-        groups: "{{ansible_user}}"
-        append: yes
-      notify:                   # если этот таск произвел изменение (желтая строка), а он произвел так как мы тот только что файл вставили, то запускается hadlers с именем restart nginx после исполнения всех таксков в  tasks
-        - restart nginx
-      become: yes
-
-    - name: update nginx barondu.site config
-      ansible.builtin.template:     # копируем/заменяем файл конфига сайтаб при этом используя шаблонизатор j2, который подставит значиния из наших переменных vars в src файл вместо указанных в нем наших переменных, при взаиможействии с этим файломю По факту это подстановка значений шаблонизатором , как интерпритатор подставляет значения при исполнении программы использование расширения .j2 не обязательно совсем и может даже не нада
-        src: files/barondu.site/nginxConf/barondu.site.j2
-        dest: /etc/nginx/sites-available/barondu.site
-      notify:                   # если этот таск произвел изменение (желтая строка), а он произвел так как мы тот только что файл вставили, то запускается hadlers с именем restart nginx после исполнения всех таксков в  tasks
-        - restart nginx
-      become: yes
-    
+  
     - name: update nginx.conf
       ansible.builtin.template:     # копируем/заменяем файл конфига сайтаб при этом используя шаблонизатор j2, который подставит значиния из наших переменных vars в src файл вместо указанных в нем наших переменных, при взаиможействии с этим файломю По факту это подстановка значений шаблонизатором , как интерпритатор подставляет значения при исполнении программы использование расширения .j2 не обязательно совсем и может даже не нада
-        src: files/barondu.site/nginxConf/nginx.conf.j2
+        src: files/nginx.conf.j2
         dest: /etc/nginx/nginx.conf
       notify:                   # если этот таск произвел изменение (желтая строка), а он произвел так как мы тот только что файл вставили, то запускается hadlers с именем restart nginx после исполнения всех таксков в  tasks
         - restart nginx
       become: yes
+
+    - name: Create a directory sites-available      # создаем директорию sites-available где будет хранится конфиг нашего сайта ansible.iphilka.ru.conf
+      ansible.builtin.file:
+        path: /etc/nginx/sites-available/
+        state: directory
+      become: yes                                   # <---  выполнить из под рута
+
+    - name: Create a directory sites-enabled        # создаем директорию sites-enabled где будет хранится ярлык на конфиг нашего сайта ansible.iphilka.ru.conf 
+      ansible.builtin.file:
+        path: /etc/nginx/sites-enabled/             
+        state: directory
+      become: yes                                   # <---  выполнить из под рута
 
   handlers:                         #handlers started after all tasks if in tasks be a notify with the same name 
     - name: restart nginx
