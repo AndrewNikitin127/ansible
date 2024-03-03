@@ -2,7 +2,7 @@
   gather_facts: no     # не собираем факты (переменные с информацией об хосте) при выполнении плейбука
 
   tasks:                                        
-    - name: Return motd to registered var         # используем команду whoami в командной строке и регистрируем в переменную result
+    - name: Return result to registered var         # используем команду whoami в командной строке и регистрируем в переменную result
       ansible.builtin.command: whoami
       register: result
 
